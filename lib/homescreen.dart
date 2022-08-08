@@ -5,7 +5,6 @@ import 'package:news/model.dart';
 import 'package:news/news_api.dart';
 import 'package:news/news_screen.dart';
 import 'package:shimmer/shimmer.dart';
-
 import 'app_colors.dart';
 
 class Homescreen extends StatefulWidget {
@@ -37,33 +36,17 @@ class _HomescreenState extends State<Homescreen> {
     final Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 50, 163, 255),
+        appBar: AppBar(
+          title: Center(
+          child:Text("HEADLINES",
+          style: TextStyle(color: Color(0xffffffff),fontSize: 29,fontFamily: "RobotoSlab-Bold",fontWeight: FontWeight.w400),)),
+          backgroundColor: Colors.black,
+        ),
+        backgroundColor: Color(0xff464646),
         body: Container(
           height: size.height,
           width: size.width,
           child: Column(children: [
-            Container(
-              height: size.height / 12,
-              width: size.width / 1.1,
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: size.width / 4,
-                  ),
-                  Text(
-                    "News App",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 25,
-                        color: Colors.white),
-                  )
-                ],
-              ),
-            ),
             isloading?
             Container(
               height: size.height/20,
@@ -72,6 +55,7 @@ class _HomescreenState extends State<Homescreen> {
             )
              : Expanded(
                 child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
                     itemCount: newslist!.length,
                     itemBuilder: (context, index) => ListItems(size,context,newslist![index])
                 ))
@@ -84,63 +68,62 @@ class _HomescreenState extends State<Homescreen> {
 
 Widget ListItems(Size size, BuildContext context, newsapi model) {
   return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
     child:  GestureDetector(
       onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => readingnews(
         model: model,
       ))),
-      child: Container(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          width: size.width / 1.15,
-          decoration:
-              BoxDecoration(
-                color: Colors.white,
-                border: Border.all(width: 1, color: Colors.black)),
-          child: Column(children: [
-            Container(
-              height: size.height / 4,
-              width: size.width / 1.05,
-              decoration: BoxDecoration(
-                  border:
-                      Border(bottom: BorderSide(color: Colors.black, width: 1))),
-              alignment: Alignment.center,
-              child: CachedNetworkImage(
-                        imageUrl:model.imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (ctx, url) => Shimmer.fromColors(
-                          baseColor: AppColors.shimmerBaseColor,
-                          highlightColor: AppColors.shimmerHighlightColor,
-                          child: Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            color: AppColors.white,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) {
-                          return Container();
-                        },
-                      ),
+      child: Stack(
+            children: <Widget>[
+              ClipRRect(child: Image.network(model.imageUrl,
+            height: 220,
+            width: 500,
+            fit:BoxFit.fill,
             ),
+            borderRadius: BorderRadius.circular(10),),
             Container(
-              width: size.width / 1.1,
-              padding: EdgeInsets.symmetric(vertical: 5),
-              child: Text(
-                model.title,
-                style: TextStyle(
-                    fontSize: 22, fontWeight: FontWeight.w500,),
-              ),
-            ),
-            Container(
-              width: size.width / 1.1,
-              padding: EdgeInsets.symmetric(vertical: 5),
-              child: Text(
-                model.description,
-                style: TextStyle(fontSize: 16,
+              height:220,
+              decoration:BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black.withOpacity(0.1),Colors.black]
                 ),
-              ),
+              borderRadius: BorderRadius.circular(10))
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 10,right: 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                SizedBox(height: 85,),
+                Text(model.title,
+                style: TextStyle(
+                  color: Color(0xfff2f2f2),
+                fontSize: 20),
+                ),
+                SizedBox(height:24 ,),
+                Row(
+                  children: [
+                    Text(model.source,
+                    style: TextStyle(color: Color(0xffbababa),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800
+                    ),
+                    ),
+                     SizedBox(width: 10,),
+                    Text(model.date.substring(0,10),
+                style: TextStyle(color: Color(0xffbababa),
+                fontSize: 12
+                ),
+                )
+                  ],
+                ),
+                
+              ],),
             )
-          ]),
-        ),
+            ]),
+            
     ),
     )
   ;

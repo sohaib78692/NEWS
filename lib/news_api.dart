@@ -4,12 +4,10 @@ import 'package:news/model.dart';
 
 Future<List<newsapi>> getNews() async {
   Uri uri = Uri.parse(
-      "https://newsapi.org/v2/everything?q=tesla&from=2022-05-25&sortBy=publishedAt&apiKey=c400b48bfe4f411ca0886bbc8d12f34e");
+      "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=381bd92597574b3ea222823404a7f027");
 
   final response = await http.get(uri);
   final List<newsapi> newslist = [];
-  
-  print(response.body);
   var jsonData = jsonDecode(response.body);
 
   if (response.statusCode == 200) {
@@ -20,6 +18,8 @@ Future<List<newsapi>> getNews() async {
               description: element['description'],
               content: element["content"],
                imageUrl: element['urlToImage'],
+               date:element['publishedAt'],
+               source:element['source']['name']
             );
             newslist.add(article);
             return newslist;

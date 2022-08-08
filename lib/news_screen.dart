@@ -1,12 +1,7 @@
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:get/get.dart';
+import 'package:news/homescreen.dart';
 import 'package:news/model.dart';
-import 'package:shimmer/shimmer.dart';
-
-import 'app_colors.dart';
 
 class readingnews extends StatelessWidget {
   final newsapi model;
@@ -14,77 +9,86 @@ class readingnews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size size=MediaQuery.of(context).size;
-        return SafeArea(
-          child: Scaffold(
-              body: Container(
-                color: Color.fromARGB(255, 50, 163, 255),
-          height: size.height,
-          width: size.width,
-          child:  SingleChildScrollView(
-            child: Column(
+    final Size size = MediaQuery.of(context).size;
+    return SafeArea(
+      child: Scaffold(
+          body: Stack(
+        children: [
+          ClipRRect(
+            child: Image.network(
+              model.imageUrl,
+              height: size.height,
+              width: size.width,
+              fit: BoxFit.fill,
+            ),
+          ),
+          Container(
+              height: size.height,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.black.withOpacity(0.4),Colors.black]
+                ),
+              )),
+          Container(
+            padding: EdgeInsets.only(left: 2, top: 2),
+            margin: EdgeInsets.only(left: 5, top: 5),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Colors.black.withOpacity(0.2)),
+            child: IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(Icons.arrow_back),
+              iconSize: 42,
+              color: Colors.white,
+            ),
+          ),
+          
+          Container(
+            padding: EdgeInsets.only(top:size.height / 2 ),
+            margin: EdgeInsets.only(left: 24, right: 24),
+            child: ListView(
               children: [
-                Align(
-                  alignment : Alignment.centerLeft,
-                  child: IconButton(
-                    onPressed: ()=> Navigator.pop(context),
-                    icon: Icon(
-                      Icons.arrow_back_ios,
-                      color: Color.fromARGB(255, 0, 0, 0),
-                    ),
+                
+                Text(
+                  model.title,
+                  style: TextStyle(
+                    color: Color(0xfff2f2f2),
+                    fontSize: 29,
+                    fontFamily: "RobotoSlab_Bold",
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  width: size.width/1.05,
-                  child: Text(
-                    model.title,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500
-                    ),
-                  )
+                SizedBox(
+                  height: 64,
                 ),
-
-                Container(
-                  height: size.height/4,
-                  width: size.width/1.05,
-                  alignment: Alignment.center,
-                  child: CachedNetworkImage(
-                        imageUrl:model.imageUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (ctx, url) => Shimmer.fromColors(
-                          baseColor: AppColors.shimmerBaseColor,
-                          highlightColor: AppColors.shimmerHighlightColor,
-                          child: Container(
-                            height: double.infinity,
-                            width: double.infinity,
-                            color: AppColors.white,
-                          ),
-                        ),
-                        errorWidget: (context, url, error) {
-                          return Container();
-                        },
-                      ),
+                Row(
+                  children: [
+                    Text(model.source,
+                        style:
+                            TextStyle(color: Color(0xfff2f2f2), fontSize: 20)),
+                    Spacer(),
+                    Text(model.date.substring(0, 10),
+                        style:
+                            TextStyle(color: Color(0xfff2f2f2), fontSize: 20))
+                  ],
                 ),
-                Container(
-                  width: size.width/1.05,
-                  child: Text(
-                    model.content,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                SizedBox(
+                  height: 16,
+                ),
+                Text(
+                  model.content,
+                  style: TextStyle(
+                      color: Color(0xffbababa),
+                      fontFamily: "RobotoSlab_Regular",
+                      fontSize: 14),
                 )
               ],
-            )
-             ),
-              ),
             ),
-        );
-    
+          )
+        ],
+      )),
+    );
   }
 }

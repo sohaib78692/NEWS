@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 
 import 'homescreen.dart';
 
@@ -12,10 +13,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return  GetMaterialApp (
           debugShowCheckedModeBanner: false,
-          title: 'News App',
-          theme: ThemeData(textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black)   ,colorScheme: ColorScheme.fromSwatch().copyWith(primary: Colors.black,background: Colors.green) ),
+          title: 'NEWS App',
+          theme: ThemeData(textTheme: Theme.of(context).textTheme.apply(bodyColor: Colors.black),fontFamily: "RobotoSlab"   ,colorScheme: ColorScheme.fromSwatch().copyWith(primary: Colors.black,background: Colors.green) ),
           home: Homescreen(),
           
         )
